@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberGuard – Scam and phishing checker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<section class="auth-screen" id="authScreen" aria-labelledby="authTitle">
+  <div class="auth-card">
+    <div class="brand auth-brand">
+      <span class="logo"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4 6 8v7c0 6.2 4.2 10.6 10 12.5 5.8-1.9 10-6.3 10-12.5V8L16 4Z" fill="#111"/><path d="m11.5 16 3.5 3.5 6-7" fill="none" stroke="#facc15" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      CyberGuard
+    </div>
+    <div class="auth-orb" aria-hidden="true"><span></span></div>
+    <h1 id="authTitle">Your security starts here</h1>
+    <p class="auth-copy" id="authCopy">Sign in with your email and password, or create an account to get started.</p>
+    <div class="auth-tabs" role="tablist" aria-label="Account access">
+      <button class="auth-tab" id="signInTab" type="button" role="tab" aria-selected="true">Sign in</button>
+      <button class="auth-tab" id="createAccountTab" type="button" role="tab" aria-selected="false">Create account</button>
+    </div>
+    <form class="auth-form" id="authForm">
+      <label class="auth-field" id="usernameField" hidden>
+        <span>Username <span class="auth-optional">(optional)</span></span>
+        <input id="usernameInput" type="text" maxlength="50" autocomplete="nickname" placeholder="How should we address you?">
+      </label>
+      <label class="auth-field">
+        <span>Email / username</span>
+        <input id="emailInput" type="email" autocomplete="email" required placeholder="you@example.com">
+      </label>
+      <label class="auth-field">
+        <span>Password</span>
+        <input id="passwordInput" type="password" autocomplete="current-password" minlength="6" required placeholder="At least 6 characters">
+      </label>
+      <label class="auth-field" id="confirmPasswordField" hidden>
+        <span>Confirm password</span>
+        <input id="confirmPasswordInput" type="password" autocomplete="new-password" minlength="6" placeholder="Enter your password again">
+      </label>
+      <button class="auth-submit" id="authSubmit" type="submit" disabled>Sign in</button>
+      <button class="auth-reset" id="resetPassword" type="button">Forgot password?</button>
+    </form>
+    <p class="auth-status" id="authStatus" role="status" aria-live="polite">Connecting securely…</p>
+    <p class="auth-note">Passwords are handled securely by Firebase Authentication and are never stored as readable text. Use the app from localhost or HTTPS, not by opening the file directly. Enable Email/Password in Firebase Authentication and authorize your domain.</p>
+  </div>
+</section>
+
+<div class="app">
+  <div class="scrim" id="scrim"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="side-top">
+      <button class="icon-btn" id="clearBtn" type="button" title="New check" aria-label="New check">
+        <svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+      </button>
+      <button class="icon-btn" id="clearHistBtn" type="button" title="Clear all checks" aria-label="Clear all checks">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="4" rx="1"/><path d="M5 8v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8M10 12h4"/></svg>
+      </button>
+      <span class="spacer"></span>
+      <button class="icon-btn close-side" id="sidebarClose" type="button" aria-label="Close menu">
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+
+    <label class="search">
+      <input id="histSearch" type="search" placeholder="Search" autocomplete="off" aria-label="Search recent checks">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    </label>
+
+    <div id="history"></div>
+
+    <div class="promo">
+      <h3>Stay safe</h3>
+      <p id="tipText"></p>
+      <button class="go" id="tipBtn" type="button" aria-label="Next tip">
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Stage -->
+  <div class="stage">
+    <header>
+      <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu">
+        <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+      </button>
+      <div class="brand">
+        <span class="logo"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4 6 8v7c0 6.2 4.2 10.6 10 12.5 5.8-1.9 10-6.3 10-12.5V8L16 4Z" fill="#111"/><path d="m11.5 16 3.5 3.5 6-7" fill="none" stroke="#facc15" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        CyberGuard
+      </div>
+      <span class="spacer"></span>
+      <span class="account-label" id="accountLabel"></span>
+      <button class="sign-out" id="signOutBtn" type="button" aria-label="Sign out" title="Sign out">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3m9-8h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"/></svg>
+      </button>
+      <button class="avatar" id="settingsBtn" type="button" aria-label="Settings" title="Settings">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
+      </button>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <div class="orb" aria-hidden="true"><i></i><b></b></div>
+        <h1>Welcome to CyberGuard</h1>
+        <p id="heroSub">Which link, message or concern do you want to check today?</p>
+      </section>
+
+      <div class="input-wrap">
+        <label class="field" for="userPrompt" id="inputLabel">Paste the link you want to check</label>
+        <textarea id="userPrompt" placeholder="https://secure-update-paypal-login.com/verify"></textarea>
+        <div class="row">
+          <button class="model-chip" id="modelChip" type="button" title="Change model in Settings">
+            <span class="gdot"></span><span id="modelName">Gemma</span>
+          </button>
+          <span class="spacer"></span>
+          <button class="mic" id="micBtn" type="button" aria-label="Speak your question" title="Speak">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4"/></svg>
+          </button>
+          <button class="send" id="analyzeBtn" type="button" aria-label="Check for threats" title="Check for threats (Ctrl+Enter)">
+            <svg viewBox="0 0 24 24"><path d="M3 11.5 21 3l-8.5 18-2.3-7.2L3 11.5Z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="voice-row">
+        <span class="eq" id="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span class="voice-status" id="voiceStatus" aria-live="polite">Tap the mic and say your question.</span>
+        <label class="toggle"><input type="checkbox" id="handsFree"> Hands-free: check and read results aloud</label>
+      </div>
+
+      <div class="samples">
+        <span class="muted">Try an example:</span>
+        <button class="chip" type="button" data-sample="link1">Fake bank link</button>
+        <button class="chip" type="button" data-sample="sms1">Delivery scam</button>
+        <button class="chip" type="button" data-sample="email1">Account suspended</button>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="What do you want to check?">
+        <button class="tab" type="button" role="tab" aria-selected="true" data-mode="link">
+          <span class="ico"><svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></span>
+          <span><b>Check a link</b><small>Spot fake login pages and look-alike domains.</small></span>
+        </button>
+        <button class="tab" type="button" role="tab" aria-selected="false" data-mode="text">
+          <span class="ico"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4V5Z"/></svg></span>
+          <span><b>Scan a message</b><small>Paste a text or email to find scam signs.</small></span>
+        </button>
+        <button class="tab" type="button" role="tab" aria-selected="false" data-mode="advice">
+          <span class="ico"><svg viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.500 7-10V6l-7-3Z"/><path d="M12 9v4M12 16h.01"/></svg></span>
+          <span><b>Ask for advice</b><small>Get clear next steps for any security worry.</small></span>
+        </button>
+      </div>
+
+      <div class="loading" id="loading" role="status"><div class="spinner"></div>Checking for scam signs…</div>
+
+      <div id="result" aria-live="polite">
+        <div class="verdict" id="verdictBox">
+          <div class="gauge">
+            <svg viewBox="0 0 120 66" aria-hidden="true">
+              <path class="track" d="M10 60 A50 50 0 0 1 110 60" fill="none" stroke-width="12" stroke-linecap="round"/>
+              <path class="fill" id="gaugeFill" d="M10 60 A50 50 0 0 1 110 60" fill="none" stroke-width="12" stroke-linecap="round"/>
+            </svg>
+            <div class="num"><span id="scoreNum">0</span><small>/100</small></div>
+          </div>
+          <div>
+            <h2 id="riskTitle">Result</h2>
+            <p id="summary"></p>
+          </div>
+        </div>
+        <div class="sections" id="sections"></div>
+        <div class="result-tools">
+          <button class="link" type="button" id="speakBtn">Read aloud</button>
+          <button class="link" type="button" id="copyBtn">Copy report</button>
+        </div>
+      </div>
+
+      <footer>Results are an AI estimate, not a guarantee. When in doubt, contact the organization using a number or site you already trust.</footer>
+    </main>
+  </div>
+</div>
+
+<dialog id="settingsDialog">
+  <form method="dialog">
+    <h2 style="font-size:22px;margin-bottom:14px">Settings</h2>
+    <label for="apiKeyInput"><b>API key</b></label>
+    <input id="apiKeyInput" type="password" autocomplete="off" placeholder="Paste your Google AI Studio key">
+    <p class="hint">Saved only in this browser.</p>
+    <label for="modelInput"><b>Model name</b></label>
+    <input id="modelInput" type="text" placeholder="e.g. gemma-4-31b-it">
+    <p class="hint">Copy the exact Gemma 4 model ID from Google AI Studio.</p>
+    <div class="row" style="justify-content:flex-end">
+      <button class="link" value="cancel">Cancel</button>
+      <button class="primary" value="save" id="saveSettings">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="script.js"></script>
+<script type="module" src="auth.js"></script>
+</body>
+</html>
